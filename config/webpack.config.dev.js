@@ -164,20 +164,9 @@ module.exports = {
               {
                 loader: 'babel-loader',
                 options: {
-                  "presets": [
-                    "react",
-                    [
-                      "es2015",
-                      {
-                        "modules": false
-                      }
-                    ],
-                    "es2016"
-                  ],
                   plugins: [
-                    ['import', { libraryName: 'antd-mobile', style: true }],
+                    ['import', { libraryName: 'antd-mobile', style: 'css' }],
                   ],
-                  cacheDirectory: true,
                 },
               },
               {
@@ -194,7 +183,7 @@ module.exports = {
             loader: require.resolve('babel-loader'),
             options: {
               plugins: [
-                ['import', { libraryName: 'antd-mobile', style: 'true' }],
+                ['import', { libraryName: 'antd-mobile', style: true }],
               ],
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/

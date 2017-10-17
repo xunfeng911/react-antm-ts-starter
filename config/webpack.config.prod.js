@@ -1,4 +1,3 @@
-'use strict';
 
 const autoprefixer = require('autoprefixer');
 const path = require('path');
@@ -88,7 +87,7 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     // `web` extension prefixes have been added for better support
     // for React Native Web.
-    extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx'],
+    extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx', '.web.ts', '.ts', '.web.tsx', '.tsx'],
     alias: {
       
       // Support React Native Web
@@ -129,6 +128,19 @@ module.exports = {
         include: paths.appSrc,
       },
       {
+        test: /\.(ts|tsx)$/,
+        enforce: 'pre',
+        use: [
+          {
+            options: {
+              eslintPath: require.resolve('tslint'),
+            },
+            loader: require.resolve('tslint-loader'),
+          },
+        ],
+        include: paths.appSrc,
+      },
+      {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
         // back to the "file" loader at the end of the loader list.
@@ -143,13 +155,35 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+          {
+            test: /\.(ts|tsx)$/,
+            include: paths.appSrc,
+            use: [
+              {
+                loader: 'babel-loader',
+                options: {
+                  plugins: [
+                    ['import', { libraryName: 'antd-mobile', style: 'css' }],
+                  ]
+                },
+              },
+              {
+                loader: 'ts-loader',
+                options: {
+                  transpileOnly: true
+                }
+              },
+            ],
+          },
           // Process JS with Babel.
           {
             test: /\.(js|jsx)$/,
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
+              plugins: [
+                ['import', { libraryName: 'antd-mobile', style: true }],
+              ],
               compact: true,
             },
           },
@@ -165,6 +199,31 @@ module.exports = {
           // tags. If you use code splitting, however, any async bundles will still
           // use the "style" loader inside the async code so CSS from them won't be
           // in the main CSS file.
+          {
+            test: /\.less$/,
+            use: [
+              require('postcss-flexbugs-fixes'),
+              require.resolve('style-loader'),
+              require.resolve('css-loader'),
+              {
+                loader: require.resolve('postcss-loader'),
+                options: {
+                  ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
+                  plugins: () => [
+                    autoprefixer({
+                      browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 8', 'iOS >= 8', 'Android >= 4'],
+                    }),
+                  ],
+                },
+              },
+              {
+                loader: require.resolve('less-loader'),
+                options: {
+                  modifyVars: { "@primary-color": "#1DA57A" },
+                },
+              },
+            ],
+          },
           {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract(
@@ -212,12 +271,33 @@ module.exports = {
           // This loader doesn't use a "test" so it will catch all modules
           // that fall through the other loaders.
           {
+            test: /\.(svg)$/i,
+            loader: 'svg-sprite-loader',
+            include: [
+              require.resolve('antd-mobile').replace(/warn\.js$/, ''),  // 1. svg files of antd-mobile
+              // path.resolve(__dirname, 'src/public/img'),  // folder of svg files in your project
+              paths.appSrc
+            ]
+          },
+          {
             loader: require.resolve('file-loader'),
             // Exclude `js` files to keep "css" loader working as it injects
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            exclude: [
+              /\.html$/,
+              /\.(js|jsx)$/,
+              /\.(ts|tsx)$/,
+              /\.css$/,
+              /\.json$/,
+              /\.bmp$/,
+              /\.gif$/,
+              /\.jpe?g$/,
+              /\.png$/,
+              /\.less$/,
+              /\.svg$/,
+            ],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },
@@ -248,6 +328,7 @@ module.exports = {
         removeStyleLinkTypeAttributes: true,
         keepClosingSlash: true,
         minifyJS: true,
+        minifyTS:true,
         minifyCSS: true,
         minifyURLs: true,
       },

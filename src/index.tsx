@@ -3,13 +3,13 @@ import * as ReactDOM from 'react-dom';
 import './index.css';
 import { AppContainer } from 'react-hot-loader';
 import registerServiceWorker from './registerServiceWorker';
-import App from './App';
+import RouteConfig from './route/index';
 
 const app = document.getElementById('root');
 const render = () => {
   ReactDOM.render(
     <AppContainer>
-       <App />
+       <RouteConfig />
     </AppContainer>,
     app
   );
