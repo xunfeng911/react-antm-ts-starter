@@ -59,7 +59,7 @@ export default class TestPage extends React.Component < any, any > {
         <DatePicker value={this.state.date} onChange={this.onChange}>
           <List.Item arrow="horizontal">datetime</List.Item>
         </DatePicker>
-        <DatePicker mode="date"title="Select Date" extra="Optional" value={this.state.date} onChange={this.onChange}>
+        <DatePicker mode="date" title="Select Date" extra="Optional" value={this.state.date} onChange={this.onChange}>
           <List.Item arrow="horizontal">date</List.Item>
         </DatePicker>
         <DatePicker mode="time" minuteStep={5} use12Hours={true} value={this.state.date} onChange={this.onChange}>
