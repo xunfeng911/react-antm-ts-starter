@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DatePicker, List } from 'antd-mobile';
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
+import { observer } from 'mobx-react';
 
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
@@ -12,7 +13,7 @@ const utcNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
 
 function formatDate (date: any) {
   /* eslint no-confusing-arrow: 0 */
-  const pad = n => n < 10 ? `0${n}` : n;
+  const pad = (n: any) => n < 10 ? `0${n}` : n;
   const dateStr = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
   const timeStr = `${pad(date.getHours())}:${pad(date.getMinutes())}`;
   return `${dateStr} ${timeStr}`;
@@ -30,6 +31,7 @@ const CustomChildren = ({ extra, onClick, children }: any) => (
   </div>
 );
 
+@observer(['appState'])
 export default class TestPage extends React.Component < any, any > {
   state: any = {
     date: now,
@@ -51,6 +53,9 @@ export default class TestPage extends React.Component < any, any > {
       return;
     }
     this.setState({ dpValue: date, visible: false });
+  }
+  componentWillMount() {
+    console.log(this.props.appState);
   }
   render() {
     return (
