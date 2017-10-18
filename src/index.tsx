@@ -5,14 +5,14 @@ import './index.css';
 import { AppContainer } from 'react-hot-loader';
 import registerServiceWorker from './registerServiceWorker';
 import RouteConfig from './route/index';
-import AppState from './mobx/appState';
+import Store from './mobx/Store';
 
-const appState = new AppState();
+const store = new Store();
 const app = document.getElementById('root');
 const render = () => {
   ReactDOM.render(
     <AppContainer>
-      <Provider appState={appState} >
+      <Provider store={store} >
          <RouteConfig />
       </Provider>
     </AppContainer>,

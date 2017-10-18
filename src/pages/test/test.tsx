@@ -31,7 +31,7 @@ const CustomChildren = ({ extra, onClick, children }: any) => (
   </div>
 );
 
-@observer(['appState'])
+@observer(['store'])
 export default class TestPage extends React.Component < any, any > {
   state: any = {
     date: now,
