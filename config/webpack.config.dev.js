@@ -28,13 +28,12 @@ const env = getClientEnvironment(publicUrl);
 module.exports = {
   // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
   // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
-  devtool: 'cheap-module-source-map',
+  devtool: 'source-map',
   // These are the "entry points" to our application.
   // This means they will be the "root" imports that are included in JS bundle.
   // The first two entry points enable "hot" CSS and auto-refreshes for JS.
   entry: [
     // We ship a few polyfills by default:
-    require.resolve('./polyfills'),
     // Include an alternative client for WebpackDevServer. A client's job is to
     // connect to WebpackDevServer by a socket and get notified about changes.
     // When you save a file, the client will either apply hot updates (in case
@@ -44,11 +43,11 @@ module.exports = {
     // to bring better experience for Create React App users. You can replace
     // the line below with these two lines if you prefer the stock client:
     `react-hot-loader/patch`,
-    require.resolve('webpack-dev-server/client') + '?/',
-    require.resolve('webpack/hot/dev-server'),
-    
+    // `webpack-dev-server/client?http://localhost:3000`,
+    // 'webpack/hot/only-dev-server',
     require.resolve('react-dev-utils/webpackHotDevClient'),
     require.resolve('react-error-overlay'),
+    require.resolve('./polyfills'),
     // Finally, this is your app's code:
     paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during
@@ -71,6 +70,21 @@ module.exports = {
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
+  },
+  devServer: {
+    // host: 'localhost',
+    // port: 3000,
+    // compress: true,
+    // disableHostCheck: true,
+    // // contentBase: path.resolve(__dirname, './public'),
+    // overlay: { warnings: true, errors: true },
+    // publicPath: publicPath,
+    // historyApiFallback: true,
+    // inline: true,
+    // respond to 404s with index.html
+
+    hot: true,
+    // enable HMR on the server
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -161,10 +175,12 @@ module.exports = {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
             use: [
+              'react-hot-loader/webpack',
               {
                 loader: 'babel-loader',
                 options: {
                   plugins: [
+                    "react-hot-loader/babel",
                     ['import', { libraryName: 'antd-mobile', style: 'css' }],
                   ],
                 },
@@ -183,6 +199,7 @@ module.exports = {
             loader: require.resolve('babel-loader'),
             options: {
               plugins: [
+                "react-hot-loader/babel",
                 ['import', { libraryName: 'antd-mobile', style: true }],
               ],
               // This is a feature of `babel-loader` for webpack (not Babel itself).
@@ -297,6 +314,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -313,7 +331,6 @@ module.exports = {
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
     new webpack.DefinePlugin(env.stringified),
     // This is necessary to emit hot updates (currently CSS only):
-    new webpack.HotModuleReplacementPlugin(),
     // Watcher doesn't work well if you mistype casing in a path so we use
     // a plugin that prints an error when you attempt to do this.
     // See https://github.com/facebookincubator/create-react-app/issues/240

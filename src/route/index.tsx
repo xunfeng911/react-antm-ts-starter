@@ -1,9 +1,7 @@
 import * as React from 'react';
 import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import {
-  TestPage,
-  AppPage
-} from './route';
+// import TestPage from '../pages/test/test';
+import { TestPage } from './route';
 
 const RouteConfig = () => (
   <Router>

@@ -32,8 +32,10 @@ export default class Bundle extends Component<any, any> {
       });
       // 注意这里，使用Promise对象; mod.default导出默认
       props.load().then((mod: any) => {
+        //   console.log(mod);
           this.setState({
               mod: mod.default ? mod.default : mod
+            // mod: mod  
           });
       });
   }

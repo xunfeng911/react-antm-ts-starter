@@ -18,6 +18,9 @@ class Store {
   setUsrInfo = (data: any) => {
     this.userData = { ...this.userData, ...data };
   }
+  getInfo = (data: object): void => {
+    console.log(data);
+  }
 }
 
 export default Store;
