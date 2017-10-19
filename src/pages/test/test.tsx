@@ -11,6 +11,8 @@ class TestPage extends React.Component<any, any> {
   render() {
     return (
       <div>
+        <b>a</b>
+        d
         <Icon type="check" />
       </div>
     );

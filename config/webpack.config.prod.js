@@ -4,6 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
@@ -55,7 +56,10 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
   // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: {
+    index: [require.resolve('./polyfills'), paths.appIndexJs],
+    vendor: ['react', 'react-dom', 'react-router-dom']
+  },
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -333,6 +337,7 @@ module.exports = {
         minifyURLs: true,
       },
     }),
+    // new BundleAnalyzerPlugin(),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.
@@ -340,6 +345,7 @@ module.exports = {
     new webpack.DefinePlugin(env.stringified),
     // Minify the code.
     new webpack.optimize.UglifyJsPlugin({
+      ie8: false,
       compress: {
         warnings: false,
         // Disabled because of an issue with Uglify breaking seemingly valid code:
@@ -350,11 +356,32 @@ module.exports = {
       },
       output: {
         comments: false,
+        beautify: false,
         // Turned on because emoji and regex is not minified properly using default
         // https://github.com/facebookincubator/create-react-app/issues/2488
         ascii_only: true,
       },
       sourceMap: shouldUseSourceMap,
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: ['vendor', 'runtime'],
+      minChunks: Infinity,
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      // ( 公共chunk(commnons chunk) 的名称)
+      name: "commons",
+      // ( 公共chunk 的文件名)
+      filename: "commons.[chunkhash:4].js",
+      // (模块必须被 3个 入口chunk 共享)
+      minChunks: 3
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      // (选择所有被选 chunks 的子 chunks)
+      children: true,
+      // (异步加载)
+      async: true,
+      // (在提取之前需要至少三个子 chunk 共享这个模块)
+      minChunks: 3,
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
