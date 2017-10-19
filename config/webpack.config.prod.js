@@ -371,7 +371,7 @@ module.exports = {
       // ( 公共chunk(commnons chunk) 的名称)
       name: "commons",
       // ( 公共chunk 的文件名)
-      filename: "commons.[chunkhash:4].js",
+      filename: "static/js/commons.[chunkhash:4].js",
       // (模块必须被 3个 入口chunk 共享)
       minChunks: 3
     }),
