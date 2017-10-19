@@ -11,7 +11,7 @@ const store = new Store();
 const app = document.getElementById('root');
 const render = () => {
   ReactDOM.render(
-    <AppContainer warnings={false}>
+    <AppContainer>
       <Provider store={store} >
          <RouteConfig />
       </Provider>
@@ -23,6 +23,6 @@ render();
 
 console.log(module);
 if (module.hot) {
-  module.hot.accept(`./route/index.tsx`, () => { render(); });
+  module.hot.accept(`./route/index`, () => { render(); });
 }
 registerServiceWorker();

@@ -11,7 +11,6 @@ class TestPage extends React.Component<any, any> {
   render() {
     return (
       <div>
-        bbcbdadsw哈哈哈哈
         <Icon type="check" />
       </div>
     );
