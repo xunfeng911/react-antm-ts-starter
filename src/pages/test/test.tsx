@@ -12,7 +12,7 @@ class TestPage extends React.Component<any, any> {
     return (
       <div>
         <b>a</b>
-        d
+        dbbbbafbasd
         <Icon type="check" />
       </div>
     );

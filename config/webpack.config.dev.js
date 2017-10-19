@@ -76,7 +76,6 @@ module.exports = {
     port: 3000,
     compress: true,
     disableHostCheck: true,
-    // contentBase: path.resolve(__dirname, './public'),
     overlay: { warnings: true, errors: true },
     publicPath: publicPath,
     historyApiFallback: true,

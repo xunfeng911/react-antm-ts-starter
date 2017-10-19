@@ -21,7 +21,6 @@ const render = () => {
 };
 render();
 
-console.log(module);
 if (module.hot) {
   module.hot.accept(`./route/index`, () => { render(); });
 }
